@@ -39,6 +39,7 @@
 6. **Background-capable**: Plan for system-level integrations
 7. **Accessibility-focused**: Work in any user situation
 8. **Documentation-first**: Document all changes, decisions, and implementations thoroughly
+9. **Current best practices**: Always use up-to-date documentation and current best practices for all tools and frameworks
 
 ### Documentation Requirements
 
@@ -70,6 +71,16 @@
    - Document new configuration options and settings
    - Keep setup/installation instructions current
    - Record known limitations and workarounds
+
+### Technology & Tool Requirements
+
+**CRITICAL**: When implementing any feature or using any coding tool, framework, or library:
+
+1. **Always reference current documentation** - Use the latest official documentation for all tools and frameworks
+2. **Verify version compatibility** - Ensure all dependencies and APIs are compatible with current versions
+3. **Follow current best practices** - Use up-to-date patterns and conventions, not deprecated approaches
+4. **Check for breaking changes** - Review changelogs and migration guides when updating dependencies
+5. **Validate implementation** - Test with current tool versions to ensure functionality works as expected
 
 ### Feature Priority Order
 
