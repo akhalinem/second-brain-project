@@ -38,6 +38,38 @@
 5. **Interruption-safe**: Design for users switching apps mid-recording
 6. **Background-capable**: Plan for system-level integrations
 7. **Accessibility-focused**: Work in any user situation
+8. **Documentation-first**: Document all changes, decisions, and implementations thoroughly
+
+### Documentation Requirements
+
+**CRITICAL**: All code changes, architectural decisions, and feature implementations must be properly documented. Keep documentation **balanced** - not too detailed, not too high-level. The goal is to make project maintenance easier for both current and future development.
+
+1. **Code Documentation**:
+
+   - Add concise comments for complex logic (explain the "why", not the "what")
+   - Document public APIs with clear input/output expectations
+   - Include brief inline comments for non-obvious business logic
+   - Keep comments current with code changes
+
+2. **Architectural Changes** (MUST be documented):
+
+   - Record major design decisions and their rationale
+   - Document data flow changes and integration points
+   - Update system diagrams when structure changes
+   - Note breaking changes and migration impact
+
+3. **Implementation Notes**:
+
+   - Document key performance trade-offs and optimizations
+   - Explain audio processing pipeline decisions briefly
+   - Record privacy/security considerations
+   - Note platform-specific integration approaches
+
+4. **Maintenance Documentation**:
+   - Update README feature lists when functionality changes
+   - Document new configuration options and settings
+   - Keep setup/installation instructions current
+   - Record known limitations and workarounds
 
 ### Feature Priority Order
 
