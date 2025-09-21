@@ -79,8 +79,9 @@
 1. **Always reference current documentation** - Use the latest official documentation for all tools and frameworks
 2. **Verify version compatibility** - Ensure all dependencies and APIs are compatible with current versions
 3. **Follow current best practices** - Use up-to-date patterns and conventions, not deprecated approaches
-4. **Check for breaking changes** - Review changelogs and migration guides when updating dependencies
-5. **Validate implementation** - Test with current tool versions to ensure functionality works as expected
+4. **Never use deprecated features** - Always use recommended, non-deprecated APIs and methods as specified in official documentation
+5. **Check for breaking changes** - Review changelogs and migration guides when updating dependencies
+6. **Validate implementation** - Test with current tool versions to ensure functionality works as expected
 
 ### Feature Priority Order
 
