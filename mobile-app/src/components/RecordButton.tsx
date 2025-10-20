@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, useColorScheme } from 'react-native';
 
 interface RecordButtonProps {
   isRecording: boolean;
@@ -18,6 +18,9 @@ export function RecordButton({
   onPress,
   disabled = false,
 }: RecordButtonProps) {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   const formatDuration = (ms: number): string => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -37,14 +40,21 @@ export function RecordButton({
         disabled={disabled}
         activeOpacity={0.7}
       >
-        <View style={[styles.innerCircle, isRecording && styles.innerCircleRecording]} />
+        <View style={[
+          styles.innerCircle,
+          isRecording && styles.innerCircleRecording,
+          isDark && styles.innerCircleDark,
+        ]} />
       </TouchableOpacity>
       
-      {isRecording && (
-        <Text style={styles.duration}>{formatDuration(duration)}</Text>
-      )}
+      {/* Fixed height container to prevent layout shift */}
+      <View style={styles.durationContainer}>
+        {isRecording && (
+          <Text style={styles.duration}>{formatDuration(duration)}</Text>
+        )}
+      </View>
       
-      <Text style={styles.label}>
+      <Text style={[styles.label, isDark && styles.labelDark]}>
         {isRecording ? 'Tap to Stop' : 'Tap to Record'}
       </Text>
     </View>
@@ -86,13 +96,21 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     backgroundColor: '#FFFFFF',
   },
+  innerCircleDark: {
+    backgroundColor: '#1C1C1E',
+  },
   innerCircleRecording: {
     width: 40,
     height: 40,
     borderRadius: 8,
   },
-  duration: {
+  durationContainer: {
+    height: 44,
     marginTop: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  duration: {
     fontSize: 28,
     fontWeight: '600',
     color: '#FF3B30',
@@ -101,6 +119,9 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 8,
     fontSize: 16,
+    color: '#8E8E93',
+  },
+  labelDark: {
     color: '#8E8E93',
   },
 });

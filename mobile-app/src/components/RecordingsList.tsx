@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  useColorScheme,
 } from 'react-native';
 import { Recording } from '../types/recording';
 
@@ -25,6 +26,9 @@ export function RecordingsList({
   onRefresh,
   refreshing = false,
 }: RecordingsListProps) {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -62,14 +66,14 @@ export function RecordingsList({
   const renderItem = ({ item }: { item: Recording }) => (
     <View style={styles.itemContainer}>
       <TouchableOpacity
-        style={styles.itemContent}
+        style={[styles.itemContent, isDark && styles.itemContentDark]}
         onLongPress={() => handleDelete(item.id)}
       >
         <View style={styles.itemInfo}>
-          <Text style={styles.itemTitle} numberOfLines={1}>
+          <Text style={[styles.itemTitle, isDark && styles.itemTitleDark]} numberOfLines={1}>
             {item.title || `Recording ${item.id}`}
           </Text>
-          <Text style={styles.itemMeta}>
+          <Text style={[styles.itemMeta, isDark && styles.itemMetaDark]}>
             {formatDate(item.createdAt)} • {formatDuration(item.duration)}
           </Text>
         </View>
@@ -79,8 +83,8 @@ export function RecordingsList({
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyTitle}>No Recordings Yet</Text>
-      <Text style={styles.emptyText}>
+      <Text style={[styles.emptyTitle, isDark && styles.emptyTitleDark]}>No Recordings Yet</Text>
+      <Text style={[styles.emptyText, isDark && styles.emptyTextDark]}>
         Tap the button below to capture your first thought
       </Text>
     </View>
@@ -140,6 +144,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#8E8E93',
   },
+  itemContentDark: {
+    backgroundColor: '#1C1C1E',
+  },
+  itemTitleDark: {
+    color: '#FFFFFF',
+  },
+  itemMetaDark: {
+    color: '#8E8E93',
+  },
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
@@ -153,10 +166,16 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginBottom: 8,
   },
+  emptyTitleDark: {
+    color: '#FFFFFF',
+  },
   emptyText: {
     fontSize: 16,
     color: '#8E8E93',
     textAlign: 'center',
     lineHeight: 22,
+  },
+  emptyTextDark: {
+    color: '#8E8E93',
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Alert, useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { RecordButton } from '../components/RecordButton';
 import { RecordingsList } from '../components/RecordingsList';
@@ -12,6 +12,7 @@ import { Recording } from '../types/recording';
  * Audio-first design with prominent record button
  */
 export default function HomeScreen() {
+  const colorScheme = useColorScheme();
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   
@@ -118,7 +119,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, colorScheme === 'dark' && styles.containerDark]}>
       <StatusBar style="auto" />
       
       <View style={styles.content}>
@@ -133,7 +134,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Record button at bottom - always accessible */}
-        <View style={styles.recordContainer}>
+        <View style={[styles.recordContainer, colorScheme === 'dark' && styles.recordContainerDark]}>
           <RecordButton
             isRecording={isRecording}
             duration={duration}
@@ -151,6 +152,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F2F2F7',
   },
+  containerDark: {
+    backgroundColor: '#000000',
+  },
   content: {
     flex: 1,
   },
@@ -160,5 +164,8 @@ const styles = StyleSheet.create({
   recordContainer: {
     backgroundColor: '#F2F2F7',
     paddingBottom: 20,
+  },
+  recordContainerDark: {
+    backgroundColor: '#000000',
   },
 });
