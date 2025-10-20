@@ -30,13 +30,6 @@ export default function HomeScreen() {
     loadRecordings();
   }, []);
 
-  // Request permission on mount if not already determined
-  useEffect(() => {
-    if (hasPermission === null) {
-      requestPermission();
-    }
-  }, [hasPermission]);
-
   /**
    * Load recordings from storage
    */
@@ -63,17 +56,23 @@ export default function HomeScreen() {
    * Handle record button press
    */
   const handleRecordPress = async () => {
+    console.log('Record button pressed', { isRecording, hasPermission, canRecord });
+    
     try {
       if (isRecording) {
+        console.log('Stopping recording...');
         // Stop recording
         const recording = await stopRecording();
         if (recording) {
+          console.log('Recording saved:', recording);
           // Reload list to show new recording
           await loadRecordings();
         }
       } else {
+        console.log('Starting recording...');
         // Start recording
         if (hasPermission === false) {
+          console.log('Permission denied');
           Alert.alert(
             'Permission Required',
             'Microphone access is required to record audio. Please grant permission in Settings.',
@@ -82,13 +81,25 @@ export default function HomeScreen() {
           return;
         }
         
+        if (hasPermission === null) {
+          console.log('Requesting permission...');
+          const granted = await requestPermission();
+          if (!granted) {
+            console.log('Permission not granted');
+            return;
+          }
+        }
+        
+        console.log('Calling startRecording...');
         await startRecording();
+        console.log('Recording started');
       }
     } catch (error) {
       console.error('Recording error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       Alert.alert(
         'Recording Error',
-        'Failed to record audio. Please try again.'
+        `Failed to record audio: ${errorMessage}`
       );
     }
   };
@@ -127,7 +138,7 @@ export default function HomeScreen() {
             isRecording={isRecording}
             duration={duration}
             onPress={handleRecordPress}
-            disabled={!canRecord && !isRecording}
+            disabled={false}
           />
         </View>
       </View>
