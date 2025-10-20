@@ -36,11 +36,14 @@ We believe voice is the most natural and fastest way to capture thoughts. The ap
 ### Phase 1: Capture Foundation
 
 - [x] One-tap audio recording
+- [x] Local storage with file system
+- [x] Recording list with metadata
+- [x] Delete recordings functionality
 - [ ] Background recording capabilities
 - [ ] Quick voice notes with automatic transcription
 - [ ] Offline recording with sync when connected
 - [ ] Basic tagging and categorization
-- [ ] Local storage with cloud backup
+- [ ] Cloud backup
 
 ### Phase 2: Intelligence Layer
 
