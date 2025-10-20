@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, SafeAreaView, Alert, useColorScheme } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Alert, useColorScheme, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { RecordButton } from '../components/RecordButton';
 import { RecordingsList } from '../components/RecordingsList';
@@ -123,6 +123,16 @@ export default function HomeScreen() {
       <StatusBar style="auto" />
       
       <View style={styles.content}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, colorScheme === 'dark' && styles.headerTitleDark]}>
+            Recordings
+          </Text>
+          <Text style={[styles.headerSubtitle, colorScheme === 'dark' && styles.headerSubtitleDark]}>
+            {recordings.length} {recordings.length === 1 ? 'thought' : 'thoughts'} captured
+          </Text>
+        </View>
+
         {/* Recordings list takes most of the space */}
         <View style={styles.listContainer}>
           <RecordingsList
@@ -157,6 +167,27 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  headerTitle: {
+    fontSize: 34,
+    fontWeight: '700',
+    color: '#000000',
+    marginBottom: 4,
+  },
+  headerTitleDark: {
+    color: '#FFFFFF',
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    color: '#8E8E93',
+  },
+  headerSubtitleDark: {
+    color: '#98989D',
   },
   listContainer: {
     flex: 1,
