@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile-app",
+    "name": "Second Brain",
     "slug": "second-brain",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,7 +29,8 @@
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
-      ]
+      ],
+      "package": "com.anonymous.secondbrain"
     },
     "web": {
       "favicon": "./assets/favicon.png"
