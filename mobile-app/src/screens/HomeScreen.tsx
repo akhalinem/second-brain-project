@@ -126,10 +126,10 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={[styles.headerTitle, colorScheme === 'dark' && styles.headerTitleDark]}>
-            Recordings
+            My Thoughts
           </Text>
           <Text style={[styles.headerSubtitle, colorScheme === 'dark' && styles.headerSubtitleDark]}>
-            {recordings.length} {recordings.length === 1 ? 'thought' : 'thoughts'} captured
+            {recordings.length === 0 ? 'No thoughts yet' : recordings.length === 1 ? '1 thought saved' : `${recordings.length} thoughts saved`}
           </Text>
         </View>
 

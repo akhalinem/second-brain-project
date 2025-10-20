@@ -34,12 +34,38 @@ export function RecordingsList({
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
     const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
     const isToday = date.toDateString() === now.toDateString();
     
+    // Just now / minutes ago
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    
+    // Today with contextual labels
     if (isToday) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const hour = date.getHours();
+      if (diffHours < 3) return `${diffHours}h ago`;
+      if (hour < 12) return 'This morning';
+      if (hour < 17) return 'This afternoon';
+      return 'Earlier today';
     }
     
+    // Yesterday
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+    
+    // This week
+    const diffDays = Math.floor(diffMs / 86400000);
+    if (diffDays < 7) {
+      return date.toLocaleDateString([], { weekday: 'long' });
+    }
+    
+    // Older
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 
@@ -52,8 +78,8 @@ export function RecordingsList({
 
   const handleDelete = (id: string) => {
     Alert.alert(
-      'Delete Recording',
-      'Are you sure you want to delete this recording?',
+      'Delete Thought',
+      'Are you sure you want to delete this thought?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -75,15 +101,15 @@ export function RecordingsList({
       onLongPress={() => handleDelete(item.id)}
     >
       <View style={styles.itemContent}>
-        {/* Recording icon */}
+        {/* Thought icon */}
         <View style={[styles.iconContainer, isDark && styles.iconContainerDark]}>
-          <View style={styles.recordingIndicator} />
+          <Text style={styles.thoughtIcon}>💭</Text>
         </View>
 
-        {/* Recording info */}
+        {/* Thought info */}
         <View style={styles.itemInfo}>
           <Text style={[styles.itemTitle, isDark && styles.itemTitleDark]} numberOfLines={2}>
-            {item.title || 'Untitled Recording'}
+            {item.title || 'Captured thought'}
           </Text>
           <Text style={[styles.itemMeta, isDark && styles.itemMetaDark]}>
             {formatDate(item.createdAt)} · {formatDuration(item.duration)}
@@ -105,11 +131,12 @@ export function RecordingsList({
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
       <View style={[styles.emptyIcon, isDark && styles.emptyIconDark]}>
-        <Text style={styles.emptyIconText}>🎙️</Text>
+        <Text style={styles.emptyIconText}>💭</Text>
       </View>
-      <Text style={[styles.emptyTitle, isDark && styles.emptyTitleDark]}>No Recordings Yet</Text>
+      <Text style={[styles.emptyTitle, isDark && styles.emptyTitleDark]}>Your thoughts live here</Text>
       <Text style={[styles.emptyText, isDark && styles.emptyTextDark]}>
-        Tap the record button to capture your first thought
+        Capture fleeting ideas before they disappear.{'\n'}
+        Your mind is for having ideas, not holding them.
       </Text>
     </View>
   );
@@ -178,11 +205,8 @@ const styles = StyleSheet.create({
   iconContainerDark: {
     backgroundColor: '#2C2C2E',
   },
-  recordingIndicator: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    backgroundColor: '#FF3B30',
+  thoughtIcon: {
+    fontSize: 28,
   },
   itemInfo: {
     flex: 1,
