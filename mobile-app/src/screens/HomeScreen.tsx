@@ -1,0 +1,153 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { RecordButton } from '../components/RecordButton';
+import { RecordingsList } from '../components/RecordingsList';
+import { useAudioCapture } from '../hooks/useAudioCapture';
+import { getRecordings, deleteRecording } from '../utils/storage';
+import { Recording } from '../types/recording';
+
+/**
+ * Home screen - main interface for capturing thoughts
+ * Audio-first design with prominent record button
+ */
+export default function HomeScreen() {
+  const [recordings, setRecordings] = useState<Recording[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const {
+    isRecording,
+    duration,
+    hasPermission,
+    canRecord,
+    startRecording,
+    stopRecording,
+    requestPermission,
+  } = useAudioCapture();
+
+  // Load recordings on mount
+  useEffect(() => {
+    loadRecordings();
+  }, []);
+
+  // Request permission on mount if not already determined
+  useEffect(() => {
+    if (hasPermission === null) {
+      requestPermission();
+    }
+  }, [hasPermission]);
+
+  /**
+   * Load recordings from storage
+   */
+  const loadRecordings = async () => {
+    try {
+      const data = await getRecordings();
+      setRecordings(data);
+    } catch (error) {
+      console.error('Error loading recordings:', error);
+      Alert.alert('Error', 'Failed to load recordings');
+    }
+  };
+
+  /**
+   * Handle refresh pull
+   */
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadRecordings();
+    setRefreshing(false);
+  }, []);
+
+  /**
+   * Handle record button press
+   */
+  const handleRecordPress = async () => {
+    try {
+      if (isRecording) {
+        // Stop recording
+        const recording = await stopRecording();
+        if (recording) {
+          // Reload list to show new recording
+          await loadRecordings();
+        }
+      } else {
+        // Start recording
+        if (hasPermission === false) {
+          Alert.alert(
+            'Permission Required',
+            'Microphone access is required to record audio. Please grant permission in Settings.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
+        
+        await startRecording();
+      }
+    } catch (error) {
+      console.error('Recording error:', error);
+      Alert.alert(
+        'Recording Error',
+        'Failed to record audio. Please try again.'
+      );
+    }
+  };
+
+  /**
+   * Handle recording deletion
+   */
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteRecording(id);
+      await loadRecordings();
+    } catch (error) {
+      console.error('Error deleting recording:', error);
+      Alert.alert('Error', 'Failed to delete recording');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
+      
+      <View style={styles.content}>
+        {/* Recordings list takes most of the space */}
+        <View style={styles.listContainer}>
+          <RecordingsList
+            recordings={recordings}
+            onDelete={handleDelete}
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
+          />
+        </View>
+
+        {/* Record button at bottom - always accessible */}
+        <View style={styles.recordContainer}>
+          <RecordButton
+            isRecording={isRecording}
+            duration={duration}
+            onPress={handleRecordPress}
+            disabled={!canRecord && !isRecording}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F2F2F7',
+  },
+  content: {
+    flex: 1,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  recordContainer: {
+    backgroundColor: '#F2F2F7',
+    paddingBottom: 20,
+  },
+});
