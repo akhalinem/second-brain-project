@@ -88,6 +88,33 @@ Audio permissions and background modes are configured in `app.json`:
 - [Mobile App Spec](../docs/MOBILE-APP.md) - Detailed mobile requirements
 - [Expo Audio Docs](https://docs.expo.dev/versions/latest/sdk/audio/) - Official audio API documentation
 
+## ✨ Current Features
+
+### Implemented
+- ✅ **Audio Recording** - One-tap recording with visual feedback
+- ✅ **Recordings List** - View all captured thoughts with timestamps
+- ✅ **Local Storage** - Offline-first with persistent storage
+- ✅ **Delete Recordings** - Long-press to remove recordings
+- ✅ **Permission Handling** - Graceful microphone permission requests
+- ✅ **Duration Display** - Real-time recording duration
+
+## 📁 Project Structure
+
+```
+src/
+├── components/       # Reusable UI components
+│   ├── RecordButton.tsx
+│   └── RecordingsList.tsx
+├── hooks/           # Custom React hooks
+│   └── useAudioCapture.ts
+├── screens/         # Screen components
+│   └── HomeScreen.tsx
+├── types/           # TypeScript type definitions
+│   └── recording.ts
+└── utils/           # Utility functions
+    └── storage.ts
+```
+
 ## 🧪 Development Notes
 
 ### Audio Recording Best Practices (Expo SDK 54)
@@ -104,15 +131,26 @@ recorder.record();
 
 **Do NOT use** deprecated `expo-av` Audio.Recording class.
 
-### Permissions
+### Custom Hook Usage
 
-Request microphone permissions before recording:
+The `useAudioCapture` hook wraps all audio recording logic:
 
 ```typescript
-import { requestRecordingPermissionsAsync } from 'expo-audio';
-
-const { granted } = await requestRecordingPermissionsAsync();
+const {
+  isRecording,
+  duration,
+  hasPermission,
+  startRecording,
+  stopRecording,
+  requestPermission,
+} = useAudioCapture();
 ```
+
+### Storage
+
+Recordings are stored using:
+- **expo-file-system** - Audio files in `Paths.document`
+- **async-storage** - Recording metadata (id, uri, duration, createdAt)
 
 ## 📄 License
 
