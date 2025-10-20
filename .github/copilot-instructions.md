@@ -38,8 +38,9 @@
 5. **Interruption-safe**: Design for users switching apps mid-recording
 6. **Background-capable**: Plan for system-level integrations
 7. **Accessibility-focused**: Work in any user situation
-8. **Documentation-first**: Document all changes, decisions, and implementations thoroughly
-9. **Current best practices**: Always use up-to-date documentation and current best practices for all tools and frameworks
+8. **Atomic commits**: Make small, focused commits that represent single logical changes
+9. **Documentation-first**: Document all changes, decisions, and implementations thoroughly
+10. **Current best practices**: Always use up-to-date documentation and current best practices for all tools and frameworks
 
 ### Documentation Requirements
 
@@ -82,6 +83,42 @@
 4. **Never use deprecated features** - Always use recommended, non-deprecated APIs and methods as specified in official documentation
 5. **Check for breaking changes** - Review changelogs and migration guides when updating dependencies
 6. **Validate implementation** - Test with current tool versions to ensure functionality works as expected
+
+### Version Control & Commit Practices
+
+**CRITICAL**: All code changes must be committed atomically with clear, descriptive commit messages.
+
+1. **Atomic Commits**:
+   - Each commit should represent a single logical change
+   - One feature, fix, or refactor per commit
+   - Commits should be independently understandable
+   - If you can describe a commit with "and", it should be split
+
+2. **Commit Message Format**:
+   - Use conventional commit format: `type: brief description`
+   - Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`, `perf`
+   - Include a body with bullet points for multi-line details
+   - Example:
+     ```
+     feat: add audio recording hook
+     
+     - Implemented useAudioRecorder with expo-audio
+     - Added permission request handling
+     - Configured high-quality recording preset
+     ```
+
+3. **Commit Workflow**:
+   - Commit after each logical unit of work is complete
+   - Don't batch unrelated changes together
+   - Stage and commit related files together
+   - Test changes before committing when possible
+
+4. **When to Commit**:
+   - After adding a new dependency
+   - After configuring a feature
+   - After implementing a component or function
+   - After updating documentation
+   - After fixing a bug
 
 ### Feature Priority Order
 
