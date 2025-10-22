@@ -80,6 +80,9 @@ export function useAudioCapture(): AudioCaptureState & AudioCaptureActions {
    */
   async function startRecording(): Promise<void> {
     try {
+      // Configure audio mode for recording (in case playback changed it)
+      await configureAudioMode();
+      
       // Check permission first
       if (hasPermission === null) {
         const granted = await requestPermission();

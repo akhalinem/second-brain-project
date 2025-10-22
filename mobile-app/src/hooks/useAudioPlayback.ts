@@ -46,25 +46,19 @@ export function useAudioPlayback(): AudioPlaybackState & AudioPlaybackActions {
   // Get real-time playback status
   const status = useAudioPlayerStatus(player);
 
-  // Configure audio mode for playback
-  useEffect(() => {
-    configureAudioMode();
-  }, []);
-
   /**
    * Configure audio mode for playback
-   * Note: We allow recording to coexist since the app needs both capabilities
-   * interruptionMode: 'doNotMix' ensures audio plays through main speaker
+   * Set allowsRecording to false to ensure audio routes through main speaker on iOS
+   * (when allowsRecording is true, iOS routes to earpiece for call-like scenarios)
    */
-  async function configureAudioMode() {
+  async function configureAudioModeForPlayback() {
     try {
       await setAudioModeAsync({
-        playsInSilentMode: true,        // Play even when device is in silent mode
-        allowsRecording: true,          // Allow recording to work alongside playback
-        interruptionMode: 'doNotMix',   // Don't mix with others - ensures proper speaker routing
+        playsInSilentMode: true,   // Play even when device is in silent mode
+        allowsRecording: false,    // Route through main speaker (not earpiece)
       });
     } catch (error) {
-      console.error('Error configuring audio mode:', error);
+      console.error('Error configuring audio mode for playback:', error);
     }
   }
 
@@ -86,6 +80,9 @@ export function useAudioPlayback(): AudioPlaybackState & AudioPlaybackActions {
    */
   const play = useCallback(async (recordingId: string, uri: string) => {
     try {
+      // Configure audio mode for playback (routes to main speaker)
+      await configureAudioModeForPlayback();
+      
       // If this is a different recording, replace the audio source
       if (recordingId !== currentRecordingId || uri !== currentUri) {
         // Replace the audio source
