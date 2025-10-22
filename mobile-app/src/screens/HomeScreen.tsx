@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { RecordButton } from '../components/RecordButton';
 import { RecordingsList } from '../components/RecordingsList';
 import { useAudioCapture } from '../hooks/useAudioCapture';
+import { useAudioPlayback } from '../hooks/useAudioPlayback';
 import { getRecordings, deleteRecording } from '../utils/storage';
 import { Recording } from '../types/recording';
 
@@ -25,6 +26,16 @@ export default function HomeScreen() {
     stopRecording,
     requestPermission,
   } = useAudioCapture();
+
+  // Playback hook for audio playback
+  const {
+    isPlaying,
+    currentRecordingId,
+    position,
+    isLoading,
+    play,
+    pause,
+  } = useAudioPlayback();
 
   // Load recordings on mount
   useEffect(() => {
@@ -118,6 +129,19 @@ export default function HomeScreen() {
     }
   };
 
+  /**
+   * Handle play/pause toggle
+   */
+  const handlePlayPause = useCallback((recordingId: string, uri: string) => {
+    if (isPlaying && currentRecordingId === recordingId) {
+      // Pause if currently playing this recording
+      pause();
+    } else {
+      // Play this recording (will stop any other playing)
+      play(recordingId, uri);
+    }
+  }, [isPlaying, currentRecordingId, play, pause]);
+
   return (
     <SafeAreaView style={[styles.container, colorScheme === 'dark' && styles.containerDark]}>
       <StatusBar style="auto" />
@@ -140,6 +164,11 @@ export default function HomeScreen() {
             onDelete={handleDelete}
             onRefresh={handleRefresh}
             refreshing={refreshing}
+            currentRecordingId={currentRecordingId}
+            isPlaying={isPlaying}
+            position={position}
+            isLoading={isLoading}
+            onPlayPause={handlePlayPause}
           />
         </View>
 
