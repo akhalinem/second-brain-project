@@ -120,6 +120,44 @@
    - After updating documentation
    - After fixing a bug
 
+### Git Flow Workflow
+
+**CRITICAL**: This project uses the [Gitflow workflow](https://git-flow.sh/) for branch management and releases.
+
+1. **Base Branches**:
+   - `main`: Production-ready code only. All commits must be tagged with version numbers
+   - `develop`: Primary integration branch for ongoing development. All completed features merge here
+
+2. **Topic Branches** (branch from `develop` unless specified):
+   - `feature/*`: New functionality development (e.g., `feature/audio-capture`)
+   - `bugfix/*`: Bug fixes for develop branch
+   - `release/*`: Prepare new production releases (bug fixes only, no new features)
+   - `hotfix/*`: Urgent production fixes (branch from `main`, merge to both `main` and `develop`)
+   - `support/*`: Maintain older supported versions (optional)
+
+3. **Git Flow Commands**:
+   - Install: `brew install gittower/tap/git-flow-next` (macOS)
+   - Start feature: `git flow feature start <name>`
+   - Finish feature: `git flow feature finish <name>`
+   - Start release: `git flow release start <version>`
+   - Finish release: `git flow release finish <version>`
+   - Start hotfix: `git flow hotfix start <version>`
+   - Finish hotfix: `git flow hotfix finish <version>`
+   - Update branch: `git flow next update` (merge parent branch changes)
+
+4. **Workflow Rules**:
+   - Never commit directly to `main` or `develop`
+   - Always work in topic branches
+   - Keep feature branches updated with `develop` using `git flow next update`
+   - Tag all releases on `main` with semantic versioning (e.g., v1.0.0)
+   - Hotfixes must be merged to both `main` and `develop`
+
+5. **Branch Naming Conventions**:
+   - Features: `feature/short-description` (e.g., `feature/audio-playback`)
+   - Bugfixes: `bugfix/issue-description` (e.g., `bugfix/recording-crash`)
+   - Releases: `release/version` (e.g., `release/1.0.0`)
+   - Hotfixes: `hotfix/version` (e.g., `hotfix/1.0.1`)
+
 ### Feature Priority Order
 
 1. **Capture speed improvements** (reduces friction)
