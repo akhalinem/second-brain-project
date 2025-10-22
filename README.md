@@ -36,7 +36,32 @@ _Coming soon..._
 
 ## 🤝 Contributing
 
-Contributions are welcome!
+Contributions are welcome! This project uses the [Gitflow workflow](https://git-flow.sh/) for branch management.
+
+### Development Workflow
+
+1. **Install Git Flow** (macOS):
+   ```bash
+   brew install gittower/tap/git-flow-next
+   ```
+
+2. **Start a new feature**:
+   ```bash
+   git flow feature start your-feature-name
+   ```
+
+3. **Make your changes** with atomic commits
+4. **Keep your branch updated**:
+   ```bash
+   git flow next update
+   ```
+
+5. **Finish your feature**:
+   ```bash
+   git flow feature finish your-feature-name
+   ```
+
+For detailed workflow guidelines, see [docs/GIT-FLOW.md](docs/GIT-FLOW.md).
 
 ## 📄 License
 
