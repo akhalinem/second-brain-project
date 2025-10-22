@@ -11,12 +11,19 @@ import {
   Pressable,
 } from 'react-native';
 import { Recording } from '../types/recording';
+import { PlaybackControls } from './PlaybackControls';
 
 interface RecordingsListProps {
   recordings: Recording[];
   onDelete: (id: string) => void;
   onRefresh?: () => void;
   refreshing?: boolean;
+  // Playback state
+  currentRecordingId: string | null;
+  isPlaying: boolean;
+  position: number;
+  isLoading: boolean;
+  onPlayPause: (recordingId: string, uri: string) => void;
 }
 
 /**
@@ -27,6 +34,11 @@ export function RecordingsList({
   onDelete,
   onRefresh,
   refreshing = false,
+  currentRecordingId,
+  isPlaying,
+  position,
+  isLoading,
+  onPlayPause,
 }: RecordingsListProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -91,42 +103,64 @@ export function RecordingsList({
     );
   };
 
-  const renderItem = ({ item }: { item: Recording }) => (
-    <Pressable
-      style={({ pressed }) => [
-        styles.itemContainer,
-        isDark && styles.itemContainerDark,
-        pressed && styles.itemPressed,
-      ]}
-      onLongPress={() => handleDelete(item.id)}
-    >
-      <View style={styles.itemContent}>
-        {/* Thought icon */}
-        <View style={[styles.iconContainer, isDark && styles.iconContainerDark]}>
-          <Text style={styles.thoughtIcon}>💭</Text>
-        </View>
-
-        {/* Thought info */}
-        <View style={styles.itemInfo}>
-          <Text style={[styles.itemTitle, isDark && styles.itemTitleDark]} numberOfLines={2}>
-            {item.title || 'Captured thought'}
-          </Text>
-          <Text style={[styles.itemMeta, isDark && styles.itemMetaDark]}>
-            {formatDate(item.createdAt)} · {formatDuration(item.duration)}
-          </Text>
-        </View>
-
-        {/* Delete button */}
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+  const renderItem = ({ item }: { item: Recording }) => {
+    const isActive = currentRecordingId === item.id;
+    
+    return (
+      <View
+        style={[
+          styles.itemContainer,
+          isDark && styles.itemContainerDark,
+        ]}
+      >
+        <Pressable
+          style={({ pressed }) => [
+            styles.itemContent,
+            pressed && styles.itemPressed,
+          ]}
+          onLongPress={() => handleDelete(item.id)}
         >
-          <Text style={styles.deleteIcon}>✕</Text>
-        </TouchableOpacity>
+          <View style={styles.itemRow}>
+            {/* Thought icon */}
+            <View style={[styles.iconContainer, isDark && styles.iconContainerDark]}>
+              <Text style={styles.thoughtIcon}>💭</Text>
+            </View>
+
+            {/* Thought info */}
+            <View style={styles.itemInfo}>
+              <Text style={[styles.itemTitle, isDark && styles.itemTitleDark]} numberOfLines={2}>
+                {item.title || 'Captured thought'}
+              </Text>
+              <Text style={[styles.itemMeta, isDark && styles.itemMetaDark]}>
+                {formatDate(item.createdAt)} · {formatDuration(item.duration)}
+              </Text>
+            </View>
+
+            {/* Delete button */}
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleDelete(item.id)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={styles.deleteIcon}>✕</Text>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+
+        {/* Playback Controls */}
+        <PlaybackControls
+          recordingId={item.id}
+          uri={item.uri}
+          duration={item.duration}
+          isActive={isActive}
+          isPlaying={isPlaying && isActive}
+          position={isActive ? position : 0}
+          isLoading={isLoading && isActive}
+          onPlayPause={onPlayPause}
+        />
       </View>
-    </Pressable>
-  );
+    );
+  };
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
@@ -186,12 +220,13 @@ const styles = StyleSheet.create({
   },
   itemPressed: {
     opacity: 0.7,
-    transform: [{ scale: 0.98 }],
   },
   itemContent: {
+    padding: 16,
+  },
+  itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
   },
   iconContainer: {
     width: 48,
