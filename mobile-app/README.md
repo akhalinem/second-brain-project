@@ -128,11 +128,13 @@ Audio permissions and background modes are configured in `app.json`:
 
 ### Implemented
 - ✅ **Audio Recording** - One-tap recording with visual feedback
+- ✅ **Audio Playback** - Play/pause controls with progress tracking
 - ✅ **Recordings List** - View all captured thoughts with timestamps
 - ✅ **Local Storage** - Offline-first with persistent storage
 - ✅ **Delete Recordings** - Long-press to remove recordings
 - ✅ **Permission Handling** - Graceful microphone permission requests
 - ✅ **Duration Display** - Real-time recording duration
+- ✅ **Playback Progress** - Visual progress bar and position tracking
 
 ## 📁 Project Structure
 

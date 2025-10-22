@@ -39,6 +39,7 @@ We believe voice is the most natural and fastest way to capture thoughts. The ap
 - [x] Local storage with file system
 - [x] Recording list with metadata
 - [x] Delete recordings functionality
+- [x] Audio playback with controls
 - [ ] Background recording capabilities
 - [ ] Quick voice notes with automatic transcription
 - [ ] Offline recording with sync when connected
