@@ -52,13 +52,14 @@ export function useAudioPlayback(): AudioPlaybackState & AudioPlaybackActions {
   }, []);
 
   /**
-   * Configure audio mode for playback (not recording)
+   * Configure audio mode for playback
+   * Note: We allow recording to coexist since the app needs both capabilities
    */
   async function configureAudioMode() {
     try {
       await setAudioModeAsync({
         playsInSilentMode: true, // Play even when device is in silent mode
-        allowsRecording: false,  // Playback mode, not recording
+        allowsRecording: true,   // Allow recording to work alongside playback
       });
     } catch (error) {
       console.error('Error configuring audio mode:', error);
