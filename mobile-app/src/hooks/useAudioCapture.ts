@@ -6,6 +6,7 @@ import {
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
 } from 'expo-audio';
+import { File } from 'expo-file-system';
 import { Recording } from '../types/recording';
 import { generateRecordingPath, saveRecording } from '../utils/storage';
 
@@ -119,17 +120,25 @@ export function useAudioCapture(): AudioCaptureState & AudioCaptureActions {
       await recorder.stop();
 
       // Get the recording URI and duration
-      const uri = recorder.uri;
+      const tempUri = recorder.uri;
       const duration = recorderState.durationMillis;
 
-      if (!uri) {
+      if (!tempUri) {
         throw new Error('Recording URI is null');
       }
 
-      // Create recording metadata
+      // Copy to permanent location with unique filename
+      const permanentPath = generateRecordingPath();
+      const tempFile = new File(tempUri);
+      const permanentFile = new File(permanentPath);
+      
+      console.log('Copying recording from temp to permanent:', { tempUri, permanentPath });
+      await tempFile.copy(permanentFile);
+
+      // Create recording metadata with permanent URI
       const recording: Recording = {
         id: Date.now().toString(),
-        uri,
+        uri: permanentFile.uri,
         duration,
         createdAt: Date.now(),
       };
@@ -140,6 +149,7 @@ export function useAudioCapture(): AudioCaptureState & AudioCaptureActions {
       // Reset path
       setRecordingPath(null);
 
+      console.log('Recording saved:', recording);
       return recording;
     } catch (error) {
       console.error('Error stopping recording:', error);

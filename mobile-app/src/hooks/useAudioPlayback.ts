@@ -83,15 +83,17 @@ export function useAudioPlayback(): AudioPlaybackState & AudioPlaybackActions {
       // Configure audio mode for playback (routes to main speaker)
       await configureAudioModeForPlayback();
       
-      // If this is a different recording, replace the audio source
+      // If this is a different recording, stop current and load new one
       if (recordingId !== currentRecordingId || uri !== currentUri) {
+        // Stop current playback first
+        player.pause();
+        
         // Replace the audio source
         player.replace(uri);
+        
+        // Update state
         setCurrentRecordingId(recordingId);
         setCurrentUri(uri);
-        
-        // Wait a brief moment for the player to load
-        // The status.isLoaded will become true when ready
       }
 
       // Start or resume playback
